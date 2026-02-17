@@ -1,6 +1,6 @@
 # OpportunityOS
 
-**AI-native product intelligence system** that automatically detects product opportunities from user behavior data and converts them into actionable specs.
+**AI-native product intelligence system** that automatically detects product opportunities from user behavior data (userpilot) and converts them into actionable specs on Kiro.dev.
 
 ## Features
 
@@ -24,8 +24,8 @@ npm install
 # Build the project
 npm run build
 
-# Run the demo
-node dist/examples/demo.js
+# start the product
+npx opportunityos init
 ```
 
 ## 🎭 Try It Now - No Setup Required!
