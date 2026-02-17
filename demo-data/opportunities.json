@@ -1,0 +1,167 @@
+[
+  {
+    "id": "49c59c28-9b71-4f3b-afcd-f6e6e5e316f4",
+    "type": "funnel_drop",
+    "status": "detected",
+    "score": 65,
+    "title": "High Dropoff in Onboarding Flow - Profile Setup",
+    "description": "Users are dropping off at \"Profile Setup\" with a 35.0% dropoff rate.",
+    "evidence": {
+      "dataSource": "userpilot",
+      "rawData": {
+        "funnelId": "funnel-1",
+        "funnelName": "Onboarding Flow",
+        "steps": [
+          {
+            "stepName": "Sign Up",
+            "userCount": 2000,
+            "dropoffRate": 0.15
+          },
+          {
+            "stepName": "Profile Setup",
+            "userCount": 1700,
+            "dropoffRate": 0.35
+          },
+          {
+            "stepName": "First Action",
+            "userCount": 1105,
+            "dropoffRate": 0.1
+          }
+        ],
+        "dateRange": {
+          "start": "2026-01-18T18:08:54.878Z",
+          "end": "2026-02-17T18:08:54.878Z"
+        }
+      },
+      "metrics": {
+        "dropoffRate": 0.35,
+        "userCount": 1700,
+        "stepIndex": 1
+      },
+      "insights": [
+        "35.0% dropoff at step 2",
+        "Affecting 1700 users"
+      ]
+    },
+    "createdAt": "2026-02-17T18:08:54.879Z",
+    "updatedAt": "2026-02-17T18:08:54.880Z",
+    "slackMessageTs": "1771351734880.sco75xq2p"
+  },
+  {
+    "id": "79a827a1-ede5-4b9e-8818-439316aaff1b",
+    "type": "funnel_drop",
+    "status": "detected",
+    "score": 72,
+    "title": "High Dropoff in Checkout Flow - Enter Payment",
+    "description": "Users are dropping off at \"Enter Payment\" with a 45.0% dropoff rate.",
+    "evidence": {
+      "dataSource": "userpilot",
+      "rawData": {
+        "funnelId": "funnel-2",
+        "funnelName": "Checkout Flow",
+        "steps": [
+          {
+            "stepName": "View Cart",
+            "userCount": 1000,
+            "dropoffRate": 0.1
+          },
+          {
+            "stepName": "Enter Payment",
+            "userCount": 900,
+            "dropoffRate": 0.45
+          },
+          {
+            "stepName": "Confirm Order",
+            "userCount": 495,
+            "dropoffRate": 0.05
+          }
+        ],
+        "dateRange": {
+          "start": "2026-01-18T18:08:54.878Z",
+          "end": "2026-02-17T18:08:54.878Z"
+        }
+      },
+      "metrics": {
+        "dropoffRate": 0.45,
+        "userCount": 900,
+        "stepIndex": 1
+      },
+      "insights": [
+        "45.0% dropoff at step 2",
+        "Affecting 900 users"
+      ]
+    },
+    "createdAt": "2026-02-17T18:08:54.879Z",
+    "updatedAt": "2026-02-17T18:08:54.881Z",
+    "slackMessageTs": "1771351734881.cq12hcolg"
+  },
+  {
+    "id": "71cd7bec-6b18-48d0-a8a6-896f4dd26fc1",
+    "type": "feature_underuse",
+    "status": "detected",
+    "score": 94,
+    "title": "Low Adoption of Advanced Analytics Dashboard",
+    "description": "Feature \"Advanced Analytics Dashboard\" has only 8.0% adoption rate.",
+    "evidence": {
+      "dataSource": "userpilot",
+      "rawData": {
+        "featureId": "feature-1",
+        "featureName": "Advanced Analytics Dashboard",
+        "activeUsers": 80,
+        "totalUsers": 1000,
+        "usageRate": 0.08,
+        "dateRange": {
+          "start": "2026-01-18T18:08:54.879Z",
+          "end": "2026-02-17T18:08:54.879Z"
+        }
+      },
+      "metrics": {
+        "usageRate": 0.08,
+        "activeUsers": 80,
+        "totalUsers": 1000
+      },
+      "insights": [
+        "Only 8.0% usage rate",
+        "920 users not using this feature",
+        "Critical: Less than 10% adoption"
+      ]
+    },
+    "createdAt": "2026-02-17T18:08:54.879Z",
+    "updatedAt": "2026-02-17T18:08:54.882Z",
+    "slackMessageTs": "1771351734882.jv1000nr1"
+  },
+  {
+    "id": "52f00e22-5076-4fb8-b57b-d0295eb98a6c",
+    "type": "feature_underuse",
+    "status": "detected",
+    "score": 90,
+    "title": "Low Adoption of Export to CSV",
+    "description": "Feature \"Export to CSV\" has only 15.0% adoption rate.",
+    "evidence": {
+      "dataSource": "userpilot",
+      "rawData": {
+        "featureId": "feature-2",
+        "featureName": "Export to CSV",
+        "activeUsers": 150,
+        "totalUsers": 1000,
+        "usageRate": 0.15,
+        "dateRange": {
+          "start": "2026-01-18T18:08:54.879Z",
+          "end": "2026-02-17T18:08:54.879Z"
+        }
+      },
+      "metrics": {
+        "usageRate": 0.15,
+        "activeUsers": 150,
+        "totalUsers": 1000
+      },
+      "insights": [
+        "Only 15.0% usage rate",
+        "850 users not using this feature"
+      ]
+    },
+    "createdAt": "2026-02-17T18:08:54.879Z",
+    "updatedAt": "2026-02-17T18:08:54.883Z",
+    "slackMessageTs": "1771351734883.b1y1lwwka"
+  }
+]
