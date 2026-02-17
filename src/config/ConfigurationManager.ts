@@ -54,6 +54,7 @@ export class ConfigurationManager {
       dataStorePath: config.dataStorePath || './data/opportunities.json',
       logLevel: config.logLevel || LogLevel.INFO,
       minOpportunityScore: config.minOpportunityScore ?? 60,
+      autoGenerateSpecs: config.autoGenerateSpecs ?? false, // Require manual approval by default
     };
   }
 

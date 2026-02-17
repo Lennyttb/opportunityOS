@@ -56,6 +56,7 @@ export interface OpportunityOSConfig {
   dataStorePath?: string; // default: './data/opportunities.json'
   logLevel?: LogLevel; // default: INFO
   minOpportunityScore?: number; // default: 60
+  autoGenerateSpecs?: boolean; // Auto-generate specs on promote, or require manual approval (default: false)
 }
 
 // ============================================================================

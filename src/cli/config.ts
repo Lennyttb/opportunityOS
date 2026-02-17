@@ -70,6 +70,7 @@ export function createDefaultConfig(demo: boolean = false): Partial<OpportunityO
       dataStorePath: './demo-data/opportunities.json',
       logLevel: LogLevel.INFO,
       minOpportunityScore: 60,
+      autoGenerateSpecs: true, // Demo mode auto-generates for simplicity
     };
   }
 
@@ -91,6 +92,7 @@ export function createDefaultConfig(demo: boolean = false): Partial<OpportunityO
     dataStorePath: './data/opportunities.json',
     logLevel: LogLevel.INFO,
     minOpportunityScore: 60,
+    autoGenerateSpecs: false, // Require manual approval by default
   };
 }
 
@@ -119,7 +121,8 @@ export function displayConfig(config: Partial<OpportunityOSConfig>): void {
   console.log(`  Data Store Path: ${config.dataStorePath || 'default'}`);
   console.log(`  Log Level: ${config.logLevel || 'default'}`);
   console.log(`  Min Opportunity Score: ${config.minOpportunityScore || 'default'}`);
-  
+  console.log(`  Auto-Generate Specs: ${config.autoGenerateSpecs ? 'Yes' : 'No (manual approval required)'}`);
+
   console.log('\n━'.repeat(60));
   console.log(`📁 Config file: ${getConfigPath()}\n`);
 }

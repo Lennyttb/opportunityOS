@@ -164,7 +164,7 @@ export class DemoOpportunityOS {
   }
 
   /**
-   * Promote an opportunity (generate spec)
+   * Promote an opportunity (generate spec if auto-enabled, otherwise just mark as promoted)
    */
   private async promoteOpportunity(opportunity: Opportunity): Promise<void> {
     this.logger.info('Promoting opportunity', { opportunityId: opportunity.id });
@@ -175,6 +175,16 @@ export class DemoOpportunityOS {
 
     if (updated.slackMessageTs) {
       await this.slack.updateOpportunity(updated.slackMessageTs, updated);
+    }
+
+    // Check if auto-generate is enabled (demo mode always auto-generates for simplicity)
+    const autoGenerate = this.config.get('autoGenerateSpecs') ?? true;
+
+    if (!autoGenerate) {
+      this.logger.info('Auto-spec generation disabled, waiting for manual approval', {
+        opportunityId: opportunity.id,
+      });
+      return;
     }
 
     // Generate spec via Mock Kiro
@@ -193,6 +203,45 @@ export class DemoOpportunityOS {
     if (withSpec.slackMessageTs) {
       await this.slack.updateOpportunity(withSpec.slackMessageTs, withSpec);
     }
+  }
+
+  /**
+   * Manually generate spec for a promoted opportunity
+   */
+  public async generateSpec(opportunityId: string): Promise<void> {
+    this.logger.info('Manually generating spec', { opportunityId });
+
+    const opportunity = this.store.get(opportunityId);
+    if (!opportunity) {
+      throw new Error(`Opportunity ${opportunityId} not found`);
+    }
+
+    if (opportunity.status !== OpportunityStatus.PROMOTED) {
+      throw new Error(
+        `Opportunity must be promoted first. Current status: ${opportunity.status}`
+      );
+    }
+
+    const spec = await this.kiro.generateSpec({
+      opportunityId: opportunity.id,
+      title: opportunity.title,
+      description: opportunity.description,
+      evidence: opportunity.evidence,
+    });
+
+    const withSpec = await this.store.update(opportunity.id, {
+      status: OpportunityStatus.SPEC_GENERATED,
+      specUrl: spec.specUrl,
+    });
+
+    if (withSpec.slackMessageTs) {
+      await this.slack.updateOpportunity(withSpec.slackMessageTs, withSpec);
+    }
+
+    this.logger.info('Spec generated manually', {
+      opportunityId: opportunity.id,
+      specUrl: spec.specUrl,
+    });
   }
 
   /**

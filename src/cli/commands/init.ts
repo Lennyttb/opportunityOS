@@ -87,14 +87,22 @@ export async function initCommand(): Promise<void> {
   console.log('\n⚙️  System Settings:\n');
   const schedule = await prompt('Detection Schedule (cron format)', '0 9 * * 1');
   const dataPath = await prompt('Data Storage Path', './data/opportunities.json');
-  
+
   const logLevelChoice = await select(
     'Log Level',
     ['debug', 'info', 'warn', 'error'],
     1
   );
-  
+
   const minScore = await prompt('Minimum Opportunity Score (0-100)', '60');
+
+  console.log('\n🤖 Spec Generation Behavior:\n');
+  const autoGenerate = await confirm(
+    'Auto-generate specs when opportunities are promoted?\n' +
+    '  • Yes: Specs generated immediately on "Promote" click\n' +
+    '  • No: Requires manual approval before spec generation',
+    false
+  );
 
   // Create config object
   const config = {
@@ -115,6 +123,7 @@ export async function initCommand(): Promise<void> {
     dataStorePath: dataPath,
     logLevel: logLevelChoice as LogLevel,
     minOpportunityScore: parseInt(minScore) || 60,
+    autoGenerateSpecs: autoGenerate,
   };
 
   // Save config

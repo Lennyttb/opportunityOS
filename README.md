@@ -7,7 +7,8 @@
 - 🔍 **Automated Detection**: Analyzes Userpilot data (funnels, NPS, feature usage) to detect friction patterns
 - 🤖 **AI-Powered Scoring**: Scores opportunities 0-100 based on impact and confidence
 - 💬 **Slack Integration**: Posts opportunities to Slack with interactive buttons (Promote/Dismiss/Investigate)
-- 📄 **Spec Generation**: Automatically generates PRDs via Kiro AI agent when promoted
+- 📄 **Spec Generation**: Generates PRDs via Kiro AI agent (auto or manual approval)
+- ⚙️ **Flexible Workflow**: Choose auto-spec generation or require manual approval
 - 📊 **Closed-Loop Learning**: Tracks post-release metrics to improve detection accuracy
 - 🔄 **Scheduled Detection**: Runs on configurable cron schedule (default: Monday 9am)
 
@@ -24,7 +25,7 @@ npm install
 # Build the project
 npm run build
 
-# start the product
+# start the project
 npx opportunityos init
 ```
 
@@ -124,6 +125,7 @@ See [CLI_GUIDE.md](./CLI_GUIDE.md) for detailed documentation.
 | `dataStorePath` | string | `./data/opportunities.json` | Path to store opportunities |
 | `logLevel` | string | `info` | Log level (debug, info, warn, error) |
 | `minOpportunityScore` | number | 60 | Minimum score to post opportunity |
+| `autoGenerateSpecs` | boolean | `false` | Auto-generate specs on promote (or require manual approval) |
 
 ## How It Works
 
