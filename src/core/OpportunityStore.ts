@@ -60,6 +60,14 @@ export class OpportunityStore {
     try {
       await fs.access(this.filePath);
       const data = await fs.readFile(this.filePath, 'utf-8');
+
+      // Handle empty file
+      if (!data || data.trim() === '') {
+        this.logger.debug('Empty data file found, starting fresh');
+        this.opportunities.clear();
+        return;
+      }
+
       const opportunities: Opportunity[] = JSON.parse(data);
 
       this.opportunities.clear();
@@ -74,6 +82,11 @@ export class OpportunityStore {
     } catch (error: any) {
       if (error.code === 'ENOENT') {
         this.logger.debug('No existing data file found, starting fresh');
+        this.opportunities.clear();
+      } else if (error instanceof SyntaxError) {
+        this.logger.warn('Corrupted data file, starting fresh', {
+          error: error.message,
+        });
         this.opportunities.clear();
       } else {
         throw error;

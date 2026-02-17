@@ -1,6 +1,6 @@
 [
   {
-    "id": "49c59c28-9b71-4f3b-afcd-f6e6e5e316f4",
+    "id": "f6e9762f-132b-462b-8193-5d43a20730b4",
     "type": "funnel_drop",
     "status": "detected",
     "score": 65,
@@ -29,8 +29,8 @@
           }
         ],
         "dateRange": {
-          "start": "2026-01-18T18:08:54.878Z",
-          "end": "2026-02-17T18:08:54.878Z"
+          "start": "2026-01-18T21:04:55.486Z",
+          "end": "2026-02-17T21:04:55.486Z"
         }
       },
       "metrics": {
@@ -43,12 +43,12 @@
         "Affecting 1700 users"
       ]
     },
-    "createdAt": "2026-02-17T18:08:54.879Z",
-    "updatedAt": "2026-02-17T18:08:54.880Z",
-    "slackMessageTs": "1771351734880.sco75xq2p"
+    "createdAt": "2026-02-17T21:04:55.487Z",
+    "updatedAt": "2026-02-17T21:04:55.488Z",
+    "slackMessageTs": "1771362295487.9d3sqbhu3"
   },
   {
-    "id": "79a827a1-ede5-4b9e-8818-439316aaff1b",
+    "id": "d5c2e39e-5c7f-4978-b08c-7e12cddce9c9",
     "type": "funnel_drop",
     "status": "detected",
     "score": 72,
@@ -77,8 +77,8 @@
           }
         ],
         "dateRange": {
-          "start": "2026-01-18T18:08:54.878Z",
-          "end": "2026-02-17T18:08:54.878Z"
+          "start": "2026-01-18T21:04:55.486Z",
+          "end": "2026-02-17T21:04:55.486Z"
         }
       },
       "metrics": {
@@ -91,12 +91,12 @@
         "Affecting 900 users"
       ]
     },
-    "createdAt": "2026-02-17T18:08:54.879Z",
-    "updatedAt": "2026-02-17T18:08:54.881Z",
-    "slackMessageTs": "1771351734881.cq12hcolg"
+    "createdAt": "2026-02-17T21:04:55.487Z",
+    "updatedAt": "2026-02-17T21:04:55.488Z",
+    "slackMessageTs": "1771362295488.ijx80ik6p"
   },
   {
-    "id": "71cd7bec-6b18-48d0-a8a6-896f4dd26fc1",
+    "id": "b89844fa-fa9d-4c5e-8607-797c36d7cfd3",
     "type": "feature_underuse",
     "status": "detected",
     "score": 94,
@@ -111,8 +111,8 @@
         "totalUsers": 1000,
         "usageRate": 0.08,
         "dateRange": {
-          "start": "2026-01-18T18:08:54.879Z",
-          "end": "2026-02-17T18:08:54.879Z"
+          "start": "2026-01-18T21:04:55.486Z",
+          "end": "2026-02-17T21:04:55.486Z"
         }
       },
       "metrics": {
@@ -126,12 +126,12 @@
         "Critical: Less than 10% adoption"
       ]
     },
-    "createdAt": "2026-02-17T18:08:54.879Z",
-    "updatedAt": "2026-02-17T18:08:54.882Z",
-    "slackMessageTs": "1771351734882.jv1000nr1"
+    "createdAt": "2026-02-17T21:04:55.487Z",
+    "updatedAt": "2026-02-17T21:04:55.489Z",
+    "slackMessageTs": "1771362295489.cfphjp05f"
   },
   {
-    "id": "52f00e22-5076-4fb8-b57b-d0295eb98a6c",
+    "id": "38a155af-1c31-433f-ab8a-1766996c1a30",
     "type": "feature_underuse",
     "status": "detected",
     "score": 90,
@@ -146,8 +146,8 @@
         "totalUsers": 1000,
         "usageRate": 0.15,
         "dateRange": {
-          "start": "2026-01-18T18:08:54.879Z",
-          "end": "2026-02-17T18:08:54.879Z"
+          "start": "2026-01-18T21:04:55.486Z",
+          "end": "2026-02-17T21:04:55.486Z"
         }
       },
       "metrics": {
@@ -160,8 +160,8 @@
         "850 users not using this feature"
       ]
     },
-    "createdAt": "2026-02-17T18:08:54.879Z",
-    "updatedAt": "2026-02-17T18:08:54.883Z",
-    "slackMessageTs": "1771351734883.b1y1lwwka"
+    "createdAt": "2026-02-17T21:04:55.487Z",
+    "updatedAt": "2026-02-17T21:04:55.489Z",
+    "slackMessageTs": "1771362295489.liw44tcji"
   }
 ]

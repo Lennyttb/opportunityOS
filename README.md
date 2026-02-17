@@ -17,21 +17,31 @@
 npm install opportunityos
 ```
 
-## 🎭 Try Demo Mode First!
-
-**No API tokens required!** Test OpportunityOS with fake data:
+## 🎭 Try It Now - No Setup Required!
 
 ```bash
-git clone https://github.com/Lennyttb/opportunityOS
-cd opportunityOS
-npm install
-npm run build
-node dist/examples/demo.js
+npx opportunityos demo
 ```
 
-See [DEMO_MODE.md](./DEMO_MODE.md) for full details.
+**That's it!** See the entire system in action with fake data - no API keys, no configuration!
 
-## Quick Start
+## 🚀 Quick Start (Production)
+
+### Interactive Setup
+
+```bash
+# Step 1: Initialize with interactive prompts
+npx opportunityos init
+
+# Step 2: Start the system
+npx opportunityos start
+```
+
+The CLI will guide you through configuration with terminal prompts!
+
+See [CLI_GUIDE.md](./CLI_GUIDE.md) for all commands.
+
+## Alternative: Code-Based Setup
 
 ```typescript
 import { OpportunityOS } from 'opportunityos';
@@ -64,6 +74,22 @@ const opportunities = await opportunityOS.runDetection();
 // Stop the system
 await opportunityOS.stop();
 ```
+
+## CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `npx opportunityos demo` | Run quick demo (no setup) |
+| `npx opportunityos init` | Interactive configuration setup |
+| `npx opportunityos start` | Start the system |
+| `npx opportunityos start --demo` | Start in demo mode |
+| `npx opportunityos stop` | Stop the system |
+| `npx opportunityos status` | Show current status |
+| `npx opportunityos config` | View configuration |
+| `npx opportunityos config --edit` | Edit configuration |
+| `npx opportunityos help` | Show help |
+
+See [CLI_GUIDE.md](./CLI_GUIDE.md) for detailed documentation.
 
 ## Configuration
 

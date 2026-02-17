@@ -30,6 +30,8 @@ Thumbs.db
 # OpportunityOS data
 data/
 *.opportunities.json
+opportunityos.config.json
+.opportunityos.pid
 
 # Temporary files
 tmp/
