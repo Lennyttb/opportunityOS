@@ -14,7 +14,18 @@
 ## Installation
 
 ```bash
-npm install opportunityos
+# Clone the repo
+git clone https://github.com/Lennyttb/opportunityOS
+cd opportunityOS
+
+# Install dependencies
+npm install
+
+# Build the project
+npm run build
+
+# Run the demo
+node dist/examples/demo.js
 ```
 
 ## 🎭 Try It Now - No Setup Required!
