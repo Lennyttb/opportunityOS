@@ -37,3 +37,6 @@ opportunityos.config.json
 tmp/
 temp/
 
+#kiro
+.kiro/
+
