@@ -6,8 +6,8 @@ OpportunityOS includes a **demo mode** that lets you test the entire system with
 
 ```bash
 # Clone the repo
-git clone https://github.com/yourusername/Kiroproject01.git
-cd Kiroproject01
+git clone https://github.com/Lennyttb/opportunityOS
+cd opportunityOS
 
 # Install dependencies
 npm install

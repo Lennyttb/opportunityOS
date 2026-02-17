@@ -20,8 +20,16 @@
     "product-management",
     "analytics"
   ],
-  "author": "",
+  "author": "Lenny Attab <lennyattab.design@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lennyttb/opportunityOS.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lennyttb/opportunityOS/issues"
+  },
+  "homepage": "https://github.com/Lennyttb/opportunityOS#readme",
   "engines": {
     "node": ">=18.0.0"
   },
