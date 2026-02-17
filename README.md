@@ -22,8 +22,8 @@ npm install opportunityos
 **No API tokens required!** Test OpportunityOS with fake data:
 
 ```bash
-git clone https://github.com/yourusername/Kiroproject01.git
-cd Kiroproject01
+git clone https://github.com/Lennyttb/opportunityOS
+cd opportunityOS
 npm install
 npm run build
 node dist/examples/demo.js
