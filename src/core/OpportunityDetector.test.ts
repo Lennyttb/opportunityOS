@@ -97,7 +97,7 @@ describe('OpportunityDetector', () => {
         dateRange: { start: '2024-01-01', end: '2024-01-31' },
       };
 
-      const opportunities = detector.detectNPSOpportunities(npsData);
+      const opportunities = detector.detectNPSOpportunities([npsData]);
 
       expect(opportunities).toHaveLength(1);
       expect(opportunities[0].type).toBe(OpportunityType.LOW_NPS);
@@ -115,7 +115,7 @@ describe('OpportunityDetector', () => {
         dateRange: { start: '2024-01-01', end: '2024-01-31' },
       };
 
-      const opportunities = detector.detectNPSOpportunities(npsData);
+      const opportunities = detector.detectNPSOpportunities([npsData]);
 
       expect(opportunities).toHaveLength(0);
     });
@@ -130,7 +130,40 @@ describe('OpportunityDetector', () => {
         dateRange: { start: '2024-01-01', end: '2024-01-31' },
       };
 
-      const opportunities = detector.detectNPSOpportunities(npsData);
+      const opportunities = detector.detectNPSOpportunities([npsData]);
+
+      expect(opportunities).toHaveLength(0);
+    });
+
+    it('should process multiple NPS data objects', () => {
+      const npsDataArray: NPSData[] = [
+        {
+          score: 15,
+          responseCount: 100,
+          detractors: Array(60).fill({ userId: 'user', score: 3, feedback: 'Not good' }),
+          passives: Array(30).fill({ userId: 'user', score: 7 }),
+          promoters: Array(10).fill({ userId: 'user', score: 9 }),
+          dateRange: { start: '2024-01-01', end: '2024-01-31' },
+        },
+        {
+          score: 10,
+          responseCount: 80,
+          detractors: Array(50).fill({ userId: 'user', score: 4, feedback: 'Could be better' }),
+          passives: Array(20).fill({ userId: 'user', score: 7 }),
+          promoters: Array(10).fill({ userId: 'user', score: 9 }),
+          dateRange: { start: '2024-02-01', end: '2024-02-28' },
+        },
+      ];
+
+      const opportunities = detector.detectNPSOpportunities(npsDataArray);
+
+      expect(opportunities).toHaveLength(2);
+      expect(opportunities[0].type).toBe(OpportunityType.LOW_NPS);
+      expect(opportunities[1].type).toBe(OpportunityType.LOW_NPS);
+    });
+
+    it('should return empty array for empty input', () => {
+      const opportunities = detector.detectNPSOpportunities([]);
 
       expect(opportunities).toHaveLength(0);
     });

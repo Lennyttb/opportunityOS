@@ -1,5 +1,5 @@
 import { ConfigurationManager } from './ConfigurationManager';
-import { LogLevel } from '../types';
+import { LogLevel, OpportunityOSConfig } from '../types';
 
 describe('ConfigurationManager', () => {
   const validConfig = {
@@ -23,8 +23,8 @@ describe('ConfigurationManager', () => {
     });
 
     it('should throw error when userpilot.apiToken is missing', () => {
-      const invalidConfig = { ...validConfig };
-      delete (invalidConfig as any).userpilot;
+      const invalidConfig = { ...validConfig } as Partial<typeof validConfig>;
+      delete invalidConfig.userpilot;
 
       expect(() => new ConfigurationManager(invalidConfig)).toThrow(
         'Configuration error: userpilot.apiToken is required'
@@ -32,11 +32,9 @@ describe('ConfigurationManager', () => {
     });
 
     it('should throw error when slack.botToken is missing', () => {
-      const invalidConfig = {
-        ...validConfig,
-        slack: { ...validConfig.slack, botToken: '' },
-      };
-      delete (invalidConfig.slack as any).botToken;
+      const slack = { ...validConfig.slack } as Record<string, unknown>;
+      delete slack['botToken'];
+      const invalidConfig = { ...validConfig, slack } as unknown as Partial<OpportunityOSConfig>;
 
       expect(() => new ConfigurationManager(invalidConfig)).toThrow(
         'Configuration error: slack.botToken is required'
@@ -44,11 +42,9 @@ describe('ConfigurationManager', () => {
     });
 
     it('should throw error when slack.appToken is missing', () => {
-      const invalidConfig = {
-        ...validConfig,
-        slack: { ...validConfig.slack, appToken: '' },
-      };
-      delete (invalidConfig.slack as any).appToken;
+      const slack = { ...validConfig.slack } as Record<string, unknown>;
+      delete slack['appToken'];
+      const invalidConfig = { ...validConfig, slack } as unknown as Partial<OpportunityOSConfig>;
 
       expect(() => new ConfigurationManager(invalidConfig)).toThrow(
         'Configuration error: slack.appToken is required'
@@ -56,11 +52,9 @@ describe('ConfigurationManager', () => {
     });
 
     it('should throw error when slack.channelId is missing', () => {
-      const invalidConfig = {
-        ...validConfig,
-        slack: { ...validConfig.slack, channelId: '' },
-      };
-      delete (invalidConfig.slack as any).channelId;
+      const slack = { ...validConfig.slack } as Record<string, unknown>;
+      delete slack['channelId'];
+      const invalidConfig = { ...validConfig, slack } as unknown as Partial<OpportunityOSConfig>;
 
       expect(() => new ConfigurationManager(invalidConfig)).toThrow(
         'Configuration error: slack.channelId is required'
@@ -68,8 +62,8 @@ describe('ConfigurationManager', () => {
     });
 
     it('should throw error when kiro.apiKey is missing', () => {
-      const invalidConfig = { ...validConfig };
-      delete (invalidConfig as any).kiro;
+      const invalidConfig = { ...validConfig } as Partial<typeof validConfig>;
+      delete invalidConfig.kiro;
 
       expect(() => new ConfigurationManager(invalidConfig)).toThrow(
         'Configuration error: kiro.apiKey is required'
@@ -150,7 +144,7 @@ describe('ConfigurationManager', () => {
       const manager = new ConfigurationManager(validConfig);
 
       expect(() => {
-        manager.update({ userpilot: { apiToken: '' } } as any);
+        manager.update({ userpilot: { apiToken: '' } });
       }).toThrow('Configuration error: userpilot.apiToken is required');
     });
   });
@@ -161,8 +155,8 @@ describe('ConfigurationManager', () => {
     });
 
     it('should return false for invalid configuration', () => {
-      const invalidConfig = { ...validConfig };
-      delete (invalidConfig as any).userpilot;
+      const invalidConfig = { ...validConfig } as Partial<typeof validConfig>;
+      delete invalidConfig.userpilot;
 
       expect(ConfigurationManager.validate(invalidConfig)).toBe(false);
     });

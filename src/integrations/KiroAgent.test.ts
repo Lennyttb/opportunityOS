@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { KiroAgent } from './KiroAgent';
-import { SpecGenerationRequest } from '../types';
+import { FunnelData, SpecGenerationRequest } from '../types';
 import { Logger } from '../utils/Logger';
 
 jest.mock('axios');
@@ -13,7 +13,7 @@ const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('KiroAgent', () => {
   let agent: KiroAgent;
-  let mockAxiosInstance: any;
+  let mockAxiosInstance: { get: jest.Mock; post: jest.Mock };
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -61,7 +61,7 @@ describe('KiroAgent', () => {
         description: 'Users are dropping off at payment step',
         evidence: {
           dataSource: 'userpilot',
-          rawData: {} as any,
+          rawData: {} as unknown as FunnelData,
           metrics: { dropoffRate: 0.45 },
           insights: ['High dropoff at payment'],
         },
@@ -103,7 +103,7 @@ describe('KiroAgent', () => {
         description: 'Test',
         evidence: {
           dataSource: 'userpilot',
-          rawData: {} as any,
+          rawData: {} as unknown as FunnelData,
           metrics: {},
           insights: [],
         },

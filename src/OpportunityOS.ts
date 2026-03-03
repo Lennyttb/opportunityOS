@@ -4,7 +4,8 @@ import { ConfigurationManager } from './config/ConfigurationManager';
 import { Logger } from './utils/Logger';
 import { OpportunityStore } from './core/OpportunityStore';
 import { OpportunityDetector } from './core/OpportunityDetector';
-import { UserpilotClient } from './integrations/UserpilotClient';
+import { IAnalyticsAdapter } from './adapters/analytics/IAnalyticsAdapter';
+import { createAnalyticsAdapter } from './adapters/analytics/AnalyticsAdapterFactory';
 import { SlackNotifier } from './integrations/SlackNotifier';
 import { KiroAgent } from './integrations/KiroAgent';
 
@@ -16,7 +17,7 @@ export class OpportunityOS {
   private logger: Logger;
   private store: OpportunityStore;
   private detector: OpportunityDetector;
-  private userpilot: UserpilotClient;
+  private analytics: IAnalyticsAdapter;
   private slack: SlackNotifier;
   private kiro: KiroAgent;
   private cronJob?: cron.ScheduledTask;
@@ -32,7 +33,10 @@ export class OpportunityOS {
     // Initialize components
     this.store = new OpportunityStore(this.config.get('dataStorePath')!);
     this.detector = new OpportunityDetector(this.config.get('minOpportunityScore')!);
-    this.userpilot = new UserpilotClient(this.config.get('userpilot'));
+    this.analytics = createAnalyticsAdapter({
+      adapter: 'userpilot',
+      config: this.config.get('userpilot')
+    });
     this.slack = new SlackNotifier(this.config.get('slack'));
     this.kiro = new KiroAgent(this.config.get('kiro'));
 
@@ -101,11 +105,11 @@ export class OpportunityOS {
     try {
       const opportunities: Opportunity[] = [];
 
-      // Fetch data from Userpilot
+      // Fetch data from analytics adapter
       const [funnels, npsData, features] = await Promise.all([
-        this.userpilot.getAllFunnels(),
-        this.userpilot.getNPSData(),
-        this.userpilot.getFeatureUsageData(),
+        this.analytics.getFunnels(),
+        this.analytics.getNPS(),
+        this.analytics.getFeatureUsage(),
       ]);
 
       // Detect opportunities

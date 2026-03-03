@@ -1,5 +1,5 @@
-import { App, ButtonAction } from '@slack/bolt';
-import { Opportunity, SlackConfig, OpportunityStatus } from '../types';
+import { App, ButtonAction, BlockAction, SlackAction } from '@slack/bolt';
+import { Opportunity, SlackBlock, SlackConfig, OpportunityStatus } from '../types';
 import { Logger } from '../utils/Logger';
 
 export type OpportunityActionHandler = (
@@ -115,11 +115,11 @@ export class SlackNotifier {
   /**
    * Build Slack blocks for an opportunity
    */
-  private buildOpportunityBlocks(opportunity: Opportunity): any[] {
+  private buildOpportunityBlocks(opportunity: Opportunity): SlackBlock[] {
     const statusEmoji = this.getStatusEmoji(opportunity.status);
     const scoreColor = this.getScoreColor(opportunity.score);
 
-    const blocks: any[] = [
+    const blocks: SlackBlock[] = [
       {
         type: 'header',
         text: {
@@ -249,7 +249,7 @@ export class SlackNotifier {
   private async handleAction(
     action: ButtonAction,
     actionType: 'promote' | 'dismiss' | 'investigate',
-    body: any
+    body: SlackAction
   ): Promise<void> {
     const opportunityId = action.value;
 
@@ -261,7 +261,7 @@ export class SlackNotifier {
     this.logger.info('Handling opportunity action', {
       opportunityId,
       action: actionType,
-      user: body.user?.id,
+      user: (body as BlockAction).user?.id,
     });
 
     if (this.actionHandler) {

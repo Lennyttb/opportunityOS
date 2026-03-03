@@ -60,7 +60,7 @@ export interface OpportunityOSConfig {
 }
 
 // ============================================================================
-// Data Types from Userpilot
+// Analytics Data Types
 // ============================================================================
 
 export interface FunnelData {
@@ -104,6 +104,25 @@ export interface FeatureUsageData {
 export interface DateRange {
   start: string; // ISO 8601
   end: string; // ISO 8601
+}
+
+/**
+ * Custom query structure for provider-specific raw event queries.
+ * Each adapter can define its own query format based on the provider's API.
+ */
+export interface CustomQuery {
+  [key: string]: unknown;
+}
+
+/**
+ * Raw event data structure for custom queries.
+ * Used by adapters that support the optional getRawEvents method.
+ */
+export interface EventData {
+  eventName: string;
+  timestamp: string; // ISO 8601
+  userId: string;
+  properties: Record<string, unknown>;
 }
 
 // ============================================================================
@@ -156,6 +175,8 @@ export interface SlackBlock {
   };
   elements?: unknown[];
   accessory?: unknown;
+  fields?: Array<{ type: string; text: string }>;
+  [key: string]: unknown;
 }
 
 // ============================================================================

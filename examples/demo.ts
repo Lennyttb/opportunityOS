@@ -99,14 +99,8 @@ async function runDemo() {
       await sleep(1000);
 
       await demo.markAsShipped(shipped.id, {
-        metricsBefore: {
-          conversionRate: 0.45,
-          dropoffRate: 0.55,
-        },
-        metricsAfter: {
-          conversionRate: 0.62,
-          dropoffRate: 0.38,
-        },
+        metricsBefore: { conversionRate: 0.45, dropoffRate: 0.55 },
+        metricsAfter: { conversionRate: 0.62, dropoffRate: 0.38 },
       });
     }
 

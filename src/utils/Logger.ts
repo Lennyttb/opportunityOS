@@ -109,7 +109,7 @@ export class Logger {
    * Reset singleton instance (useful for testing)
    */
   public static reset(): void {
-    Logger.instance = undefined as any;
+    Logger.instance = undefined as unknown as Logger;
   }
 }
 

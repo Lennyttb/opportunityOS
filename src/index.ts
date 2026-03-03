@@ -8,7 +8,9 @@ export * from './types';
 export * from './config/ConfigurationManager';
 export * from './core/OpportunityStore';
 export * from './core/OpportunityDetector';
-export * from './integrations/UserpilotClient';
+export * from './adapters/analytics/IAnalyticsAdapter';
+export * from './adapters/analytics/AnalyticsAdapterFactory';
+export * from './adapters/analytics/UserpilotAdapter';
 export * from './integrations/SlackNotifier';
 export * from './integrations/KiroAgent';
 export * from './utils/Logger';
@@ -17,7 +19,7 @@ export * from './OpportunityOS';
 
 // Demo/Mock exports (for testing without real APIs)
 export * from './demo/DemoOpportunityOS';
-export * from './demo/MockUserpilotClient';
+export * from './demo/MockUserpilotAdapter';
 export * from './demo/MockSlackNotifier';
 export * from './demo/MockKiroAgent';
 

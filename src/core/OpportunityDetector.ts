@@ -4,6 +4,7 @@ import {
   OpportunityType,
   OpportunityStatus,
   FunnelData,
+  FunnelStep,
   NPSData,
   FeatureUsageData,
 } from '../types';
@@ -53,18 +54,21 @@ export class OpportunityDetector {
   /**
    * Detect opportunities from NPS data
    */
-  public detectNPSOpportunities(npsData: NPSData): Opportunity[] {
-    this.logger.info('Detecting NPS opportunities', { score: npsData.score });
+  public detectNPSOpportunities(npsDataArray: NPSData[]): Opportunity[] {
+    this.logger.info('Detecting NPS opportunities', { npsDataCount: npsDataArray.length });
 
     const opportunities: Opportunity[] = [];
 
-    // Detect low NPS (< 30)
-    if (npsData.score < 30 && npsData.responseCount >= 20) {
-      const score = this.calculateNPSScore(npsData.score, npsData.responseCount);
+    // Loop through each NPS data object
+    for (const npsData of npsDataArray) {
+      // Detect low NPS (< 30)
+      if (npsData.score < 30 && npsData.responseCount >= 20) {
+        const score = this.calculateNPSScore(npsData.score, npsData.responseCount);
 
-      if (score >= this.minOpportunityScore) {
-        const opportunity = this.createNPSOpportunity(npsData, score);
-        opportunities.push(opportunity);
+        if (score >= this.minOpportunityScore) {
+          const opportunity = this.createNPSOpportunity(npsData, score);
+          opportunities.push(opportunity);
+        }
       }
     }
 
@@ -147,7 +151,7 @@ export class OpportunityDetector {
    */
   private createFunnelOpportunity(
     funnel: FunnelData,
-    step: any,
+    step: FunnelStep,
     stepIndex: number,
     score: number
   ): Opportunity {

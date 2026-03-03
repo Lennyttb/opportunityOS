@@ -1,6 +1,6 @@
 import * as fs from 'fs/promises';
 import { OpportunityStore } from './OpportunityStore';
-import { Opportunity, OpportunityStatus, OpportunityType } from '../types';
+import { FunnelData, Opportunity, OpportunityStatus, OpportunityType } from '../types';
 import { Logger } from '../utils/Logger';
 
 jest.mock('fs/promises');
@@ -19,7 +19,7 @@ describe('OpportunityStore', () => {
     description: 'Test description',
     evidence: {
       dataSource: 'userpilot',
-      rawData: {} as any,
+      rawData: {} as unknown as FunnelData,
       metrics: { dropoffRate: 0.45 },
       insights: ['High dropoff at step 2'],
     },
@@ -153,7 +153,7 @@ describe('OpportunityStore', () => {
     });
 
     it('should not allow changing id', async () => {
-      const updated = await store.update('opp-123', { id: 'new-id' } as any);
+      const updated = await store.update('opp-123', { id: 'new-id' } as Partial<Opportunity>);
 
       expect(updated.id).toBe('opp-123');
     });

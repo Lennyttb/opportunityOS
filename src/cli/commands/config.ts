@@ -40,7 +40,7 @@ export async function configCommand(options: { edit?: boolean }): Promise<void> 
         });
 
         console.log('\n✅ Config file closed.\n');
-      } catch (error) {
+      } catch {
         console.log('\n💡 Tip: You can manually edit the file at:');
         console.log(`   ${configPath}\n`);
       }

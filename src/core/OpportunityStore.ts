@@ -79,8 +79,9 @@ export class OpportunityStore {
       this.logger.debug('Loaded opportunities from file', {
         count: opportunities.length,
       });
-    } catch (error: any) {
-      if (error.code === 'ENOENT') {
+    } catch (error: unknown) {
+      const code = error && typeof error === 'object' ? (error as { code?: unknown }).code : undefined;
+      if (code === 'ENOENT') {
         this.logger.debug('No existing data file found, starting fresh');
         this.opportunities.clear();
       } else if (error instanceof SyntaxError) {
@@ -111,7 +112,7 @@ export class OpportunityStore {
     if (!opp.id || typeof opp.id !== 'string') {
       throw new Error('Invalid opportunity: missing or invalid id');
     }
-    if (!opp.type || !Object.values(OpportunityStatus).includes(opp.status as any)) {
+    if (!opp.type || !Object.values(OpportunityStatus).includes(opp.status)) {
       throw new Error(`Invalid opportunity: invalid status ${opp.status}`);
     }
     if (typeof opp.score !== 'number' || opp.score < 0 || opp.score > 100) {

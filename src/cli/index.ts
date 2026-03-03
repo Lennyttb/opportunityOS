@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import packageJson from '../../package.json';
 import { initCommand } from './commands/init';
 import { startCommand } from './commands/start';
 import { stopCommand } from './commands/stop';
@@ -138,7 +139,6 @@ DOCUMENTATION:
 }
 
 function showVersion() {
-  const packageJson = require('../../package.json');
   console.log(`\nOpportunityOS v${packageJson.version}\n`);
 }
 

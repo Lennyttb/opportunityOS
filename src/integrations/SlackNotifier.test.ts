@@ -1,5 +1,5 @@
 import { SlackNotifier } from './SlackNotifier';
-import { Opportunity, OpportunityStatus, OpportunityType } from '../types';
+import { FunnelData, Opportunity, OpportunityStatus, OpportunityType } from '../types';
 import { Logger } from '../utils/Logger';
 
 jest.mock('@slack/bolt');
@@ -33,7 +33,7 @@ describe('SlackNotifier', () => {
     description: 'Users are dropping off at payment step',
     evidence: {
       dataSource: 'userpilot',
-      rawData: {} as any,
+      rawData: {} as unknown as FunnelData,
       metrics: { dropoffRate: 0.45 },
       insights: ['45% dropoff at payment step', 'Highest on mobile devices'],
     },
@@ -62,7 +62,7 @@ describe('SlackNotifier', () => {
 
   describe('constructor', () => {
     it('should initialize Slack app with correct config', () => {
-      const { App } = require('@slack/bolt');
+      const { App } = jest.requireMock('@slack/bolt') as { App: jest.Mock };
       expect(App).toHaveBeenCalledWith({
         token: 'xoxb-test-token',
         appToken: 'xapp-test-token',
@@ -117,7 +117,7 @@ describe('SlackNotifier', () => {
       const call = mockApp.client.chat.postMessage.mock.calls[0][0];
       const blocks = call.blocks;
 
-      const actionsBlock = blocks.find((b: any) => b.type === 'actions');
+      const actionsBlock = blocks.find((b: { type: string }) => b.type === 'actions');
       expect(actionsBlock).toBeDefined();
       expect(actionsBlock.elements).toHaveLength(3);
       expect(actionsBlock.elements[0].action_id).toBe('promote_opp-123');
@@ -137,7 +137,7 @@ describe('SlackNotifier', () => {
       const call = mockApp.client.chat.postMessage.mock.calls[0][0];
       const blocks = call.blocks;
 
-      const actionsBlock = blocks.find((b: any) => b.type === 'actions');
+      const actionsBlock = blocks.find((b: { type: string }) => b.type === 'actions');
       expect(actionsBlock).toBeUndefined();
     });
 

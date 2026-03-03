@@ -1,42 +1,22 @@
-import { FunnelData, NPSData, FeatureUsageData, UserpilotConfig } from '../types';
+import { FunnelData, NPSData, FeatureUsageData, UserpilotConfig, DateRange } from '../types';
 import { Logger } from '../utils/Logger';
+import { IAnalyticsAdapter } from '../adapters/analytics/IAnalyticsAdapter';
 
 /**
- * Mock UserpilotClient for testing without real API
+ * Mock UserpilotAdapter for testing without real API
  */
-export class MockUserpilotClient {
+export class MockUserpilotAdapter implements IAnalyticsAdapter {
   private logger: Logger;
 
   constructor(_config: UserpilotConfig) {
-    this.logger = Logger.getInstance().child('MockUserpilotClient');
-    this.logger.info('MockUserpilotClient initialized (DEMO MODE)');
-  }
-
-  /**
-   * Generate fake funnel data
-   */
-  public async getFunnelData(funnelId: string): Promise<FunnelData> {
-    this.logger.debug('Generating fake funnel data', { funnelId });
-
-    return {
-      funnelId,
-      funnelName: 'Checkout Flow',
-      steps: [
-        { stepName: 'View Cart', userCount: 1000, dropoffRate: 0.1 },
-        { stepName: 'Enter Payment', userCount: 900, dropoffRate: 0.45 }, // High dropoff!
-        { stepName: 'Confirm Order', userCount: 495, dropoffRate: 0.05 },
-      ],
-      dateRange: {
-        start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        end: new Date().toISOString(),
-      },
-    };
+    this.logger = Logger.getInstance().child('MockUserpilotAdapter');
+    this.logger.info('MockUserpilotAdapter initialized (DEMO MODE)');
   }
 
   /**
    * Generate fake funnel data for all funnels
    */
-  public async getAllFunnels(): Promise<FunnelData[]> {
+  public async getFunnels(_dateRange?: DateRange): Promise<FunnelData[]> {
     this.logger.debug('Generating fake funnels data');
 
     return [
@@ -72,45 +52,47 @@ export class MockUserpilotClient {
   /**
    * Generate fake NPS data
    */
-  public async getNPSData(): Promise<NPSData> {
+  public async getNPS(_dateRange?: DateRange): Promise<NPSData[]> {
     this.logger.debug('Generating fake NPS data');
 
-    return {
-      score: 25, // Low NPS!
-      responseCount: 150,
-      detractors: Array(90)
-        .fill(null)
-        .map((_, i) => ({
-          userId: `user-${i}`,
-          score: Math.floor(Math.random() * 7), // 0-6
-          feedback: i < 5 ? 'The checkout process is too complicated' : undefined,
-          timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-        })),
-      passives: Array(45)
-        .fill(null)
-        .map((_, i) => ({
-          userId: `user-passive-${i}`,
-          score: 7 + Math.floor(Math.random() * 2), // 7-8
-          timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-        })),
-      promoters: Array(15)
-        .fill(null)
-        .map((_, i) => ({
-          userId: `user-promoter-${i}`,
-          score: 9 + Math.floor(Math.random() * 2), // 9-10
-          timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
-        })),
-      dateRange: {
-        start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-        end: new Date().toISOString(),
+    return [
+      {
+        score: 25, // Low NPS!
+        responseCount: 150,
+        detractors: Array(90)
+          .fill(null)
+          .map((_, i) => ({
+            userId: `user-${i}`,
+            score: Math.floor(Math.random() * 7), // 0-6
+            feedback: i < 5 ? 'The checkout process is too complicated' : undefined,
+            timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+          })),
+        passives: Array(45)
+          .fill(null)
+          .map((_, i) => ({
+            userId: `user-passive-${i}`,
+            score: 7 + Math.floor(Math.random() * 2), // 7-8
+            timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+          })),
+        promoters: Array(15)
+          .fill(null)
+          .map((_, i) => ({
+            userId: `user-promoter-${i}`,
+            score: 9 + Math.floor(Math.random() * 2), // 9-10
+            timestamp: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
+          })),
+        dateRange: {
+          start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+          end: new Date().toISOString(),
+        },
       },
-    };
+    ];
   }
 
   /**
    * Generate fake feature usage data
    */
-  public async getFeatureUsageData(): Promise<FeatureUsageData[]> {
+  public async getFeatureUsage(_dateRange?: DateRange): Promise<FeatureUsageData[]> {
     this.logger.debug('Generating fake feature usage data');
 
     return [

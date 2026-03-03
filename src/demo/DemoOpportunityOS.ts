@@ -1,9 +1,9 @@
-import { OpportunityOSConfig, Opportunity, OpportunityStatus, LogLevel } from '../types';
+import { OpportunityOSConfig, Opportunity, OpportunityStatus, ActualImpact, SpecGenerationRequest, LogLevel } from '../types';
 import { ConfigurationManager } from '../config/ConfigurationManager';
 import { Logger } from '../utils/Logger';
 import { OpportunityStore } from '../core/OpportunityStore';
 import { OpportunityDetector } from '../core/OpportunityDetector';
-import { MockUserpilotClient } from './MockUserpilotClient';
+import { MockUserpilotAdapter } from './MockUserpilotAdapter';
 import { MockSlackNotifier } from './MockSlackNotifier';
 import { MockKiroAgent } from './MockKiroAgent';
 
@@ -16,7 +16,7 @@ export class DemoOpportunityOS {
   private logger: Logger;
   private store: OpportunityStore;
   private detector: OpportunityDetector;
-  private userpilot: MockUserpilotClient;
+  private userpilot: MockUserpilotAdapter;
   private slack: MockSlackNotifier;
   private kiro: MockKiroAgent;
 
@@ -46,7 +46,7 @@ export class DemoOpportunityOS {
     // Initialize components with MOCK versions
     this.store = new OpportunityStore(this.config.get('dataStorePath')!);
     this.detector = new OpportunityDetector(this.config.get('minOpportunityScore')!);
-    this.userpilot = new MockUserpilotClient(this.config.get('userpilot'));
+    this.userpilot = new MockUserpilotAdapter(this.config.get('userpilot'));
     this.slack = new MockSlackNotifier(this.config.get('slack'));
     this.kiro = new MockKiroAgent(this.config.get('kiro'));
 
@@ -93,9 +93,9 @@ export class DemoOpportunityOS {
       // Fetch MOCK data
       console.log('\n📊 Fetching mock data from "Userpilot"...\n');
       const [funnels, npsData, features] = await Promise.all([
-        this.userpilot.getAllFunnels(),
-        this.userpilot.getNPSData(),
-        this.userpilot.getFeatureUsageData(),
+        this.userpilot.getFunnels(),
+        this.userpilot.getNPS(),
+        this.userpilot.getFeatureUsage(),
       ]);
 
       // Detect opportunities
@@ -188,60 +188,42 @@ export class DemoOpportunityOS {
     }
 
     // Generate spec via Mock Kiro
-    const spec = await this.kiro.generateSpec({
-      opportunityId: opportunity.id,
-      title: opportunity.title,
-      description: opportunity.description,
-      evidence: opportunity.evidence,
-    });
-
-    const withSpec = await this.store.update(opportunity.id, {
-      status: OpportunityStatus.SPEC_GENERATED,
-      specUrl: spec.specUrl,
-    });
-
-    if (withSpec.slackMessageTs) {
-      await this.slack.updateOpportunity(withSpec.slackMessageTs, withSpec);
-    }
+    await this.generateSpec(opportunity.id);
   }
 
   /**
-   * Manually generate spec for a promoted opportunity
+   * Generate spec for a promoted opportunity
    */
   public async generateSpec(opportunityId: string): Promise<void> {
-    this.logger.info('Manually generating spec', { opportunityId });
-
     const opportunity = this.store.get(opportunityId);
     if (!opportunity) {
       throw new Error(`Opportunity ${opportunityId} not found`);
     }
 
     if (opportunity.status !== OpportunityStatus.PROMOTED) {
-      throw new Error(
-        `Opportunity must be promoted first. Current status: ${opportunity.status}`
-      );
+      throw new Error(`Opportunity ${opportunityId} is not in PROMOTED status`);
     }
 
-    const spec = await this.kiro.generateSpec({
+    this.logger.info('Generating spec via Mock Kiro', { opportunityId });
+
+    const request: SpecGenerationRequest = {
       opportunityId: opportunity.id,
       title: opportunity.title,
       description: opportunity.description,
       evidence: opportunity.evidence,
-    });
+    };
+    const spec = await this.kiro.generateSpec(request);
 
-    const withSpec = await this.store.update(opportunity.id, {
+    const updated = await this.store.update(opportunityId, {
       status: OpportunityStatus.SPEC_GENERATED,
       specUrl: spec.specUrl,
     });
 
-    if (withSpec.slackMessageTs) {
-      await this.slack.updateOpportunity(withSpec.slackMessageTs, withSpec);
+    if (updated.slackMessageTs) {
+      await this.slack.updateOpportunity(updated.slackMessageTs, updated);
     }
 
-    this.logger.info('Spec generated manually', {
-      opportunityId: opportunity.id,
-      specUrl: spec.specUrl,
-    });
+    this.logger.info('Spec generated successfully', { opportunityId, specUrl: spec.specUrl });
   }
 
   /**
@@ -263,9 +245,7 @@ export class DemoOpportunityOS {
    * Mark opportunity for investigation
    */
   private async investigateOpportunity(opportunity: Opportunity): Promise<void> {
-    this.logger.info('Marking opportunity for investigation', {
-      opportunityId: opportunity.id,
-    });
+    this.logger.info('Marking opportunity for investigation', { opportunityId: opportunity.id });
 
     const updated = await this.store.update(opportunity.id, {
       status: OpportunityStatus.INVESTIGATING,
@@ -277,13 +257,13 @@ export class DemoOpportunityOS {
   }
 
   /**
-   * Simulate user interaction (for demo)
+   * Simulate user action (for demo purposes)
    */
   public async simulateUserAction(
     opportunityId: string,
     action: 'promote' | 'dismiss' | 'investigate'
   ): Promise<void> {
-    await this.slack.simulateAction(opportunityId, action);
+    await this.handleOpportunityAction(opportunityId, action);
   }
 
   /**
@@ -301,49 +281,28 @@ export class DemoOpportunityOS {
   }
 
   /**
-   * Get a specific opportunity
-   */
-  public getOpportunity(id: string): Opportunity | undefined {
-    return this.store.get(id);
-  }
-
-  /**
-   * Mark an opportunity as shipped
+   * Mark opportunity as shipped
    */
   public async markAsShipped(
     opportunityId: string,
-    actualImpact: {
-      metricsBefore: Record<string, number>;
-      metricsAfter: Record<string, number>;
-    }
+    metrics: Omit<ActualImpact, 'measuredAt'>
   ): Promise<void> {
-    this.logger.info('Marking opportunity as shipped', { opportunityId });
-
     const opportunity = this.store.get(opportunityId);
     if (!opportunity) {
       throw new Error(`Opportunity ${opportunityId} not found`);
     }
 
+    const actualImpact: ActualImpact = { ...metrics, measuredAt: new Date().toISOString() };
+    this.logger.info('Marking opportunity as shipped', { opportunityId, actualImpact });
+
     const updated = await this.store.update(opportunityId, {
       status: OpportunityStatus.SHIPPED,
-      actualImpact: {
-        ...actualImpact,
-        measuredAt: new Date().toISOString(),
-      },
+      actualImpact,
     });
 
     if (updated.slackMessageTs) {
       await this.slack.updateOpportunity(updated.slackMessageTs, updated);
     }
-
-    if (opportunity.specUrl) {
-      await this.kiro.provideFeedback(opportunityId, {
-        rating: 5,
-        actualImpact: actualImpact.metricsAfter,
-      });
-    }
-
-    this.logger.info('Opportunity marked as shipped', { opportunityId });
   }
 }
 

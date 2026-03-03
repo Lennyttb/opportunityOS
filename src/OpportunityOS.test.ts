@@ -1,18 +1,27 @@
 import { OpportunityOS } from './OpportunityOS';
 import { OpportunityStatus, OpportunityType } from './types';
 import { Logger } from './utils/Logger';
+import { createAnalyticsAdapter } from './adapters/analytics/AnalyticsAdapterFactory';
+import type { ConfigurationManager as ConfigurationManagerType } from './config/ConfigurationManager';
 
 jest.mock('./config/ConfigurationManager');
 jest.mock('./core/OpportunityStore');
 jest.mock('./core/OpportunityDetector');
-jest.mock('./integrations/UserpilotClient');
 jest.mock('./integrations/SlackNotifier');
 jest.mock('./integrations/KiroAgent');
 jest.mock('./utils/Logger');
 jest.mock('node-cron');
+jest.mock('./adapters/analytics/AnalyticsAdapterFactory', () => ({
+  createAnalyticsAdapter: jest.fn().mockReturnValue({
+    getFunnels: jest.fn().mockResolvedValue([]),
+    getNPS: jest.fn().mockResolvedValue([]),
+    getFeatureUsage: jest.fn().mockResolvedValue([]),
+  }),
+}));
 
 describe('OpportunityOS', () => {
   let opportunityOS: OpportunityOS;
+  let mockConfigManager: jest.Mocked<ConfigurationManagerType>;
 
   const mockConfig = {
     userpilot: { apiToken: 'test-token' },
@@ -32,12 +41,39 @@ describe('OpportunityOS', () => {
 
     Logger.getInstance = jest.fn().mockReturnValue(mockLogger);
 
+    // Mock ConfigurationManager to return config values
+    const configMap: Record<string, unknown> = {
+      userpilot: mockConfig.userpilot,
+      slack: mockConfig.slack,
+      kiro: mockConfig.kiro,
+      logLevel: 'info',
+      dataStorePath: './data/opportunities.json',
+      minOpportunityScore: 60,
+      detectionSchedule: '0 9 * * 1',
+      autoGenerateSpecs: false,
+    };
+
+    mockConfigManager = {
+      get: jest.fn((key: string) => configMap[key]),
+      getConfig: jest.fn().mockReturnValue(mockConfig),
+    } as unknown as jest.Mocked<ConfigurationManagerType>;
+
+    const { ConfigurationManager } = jest.requireMock('./config/ConfigurationManager') as { ConfigurationManager: jest.Mock };
+    ConfigurationManager.mockImplementation(() => mockConfigManager);
+
     opportunityOS = new OpportunityOS(mockConfig);
   });
 
   describe('constructor', () => {
     it('should initialize OpportunityOS', () => {
       expect(opportunityOS).toBeInstanceOf(OpportunityOS);
+    });
+
+    it('should create analytics adapter using factory with correct config', () => {
+      expect(createAnalyticsAdapter).toHaveBeenCalledWith({
+        adapter: 'userpilot',
+        config: mockConfig.userpilot,
+      });
     });
   });
 
@@ -62,7 +98,7 @@ describe('OpportunityOS', () => {
         },
       ];
 
-      (opportunityOS as any).store.getAll = jest.fn().mockReturnValue(mockOpportunities);
+      (opportunityOS as unknown as { store: { getAll: jest.Mock } }).store.getAll = jest.fn().mockReturnValue(mockOpportunities);
 
       const result = opportunityOS.getOpportunities();
 
@@ -79,14 +115,15 @@ describe('OpportunityOS', () => {
         },
       ];
 
-      (opportunityOS as any).store.getByStatus = jest
+      const storeWithStatus = opportunityOS as unknown as { store: { getByStatus: jest.Mock } };
+      storeWithStatus.store.getByStatus = jest
         .fn()
         .mockReturnValue(mockOpportunities);
 
       const result = opportunityOS.getOpportunitiesByStatus(OpportunityStatus.PROMOTED);
 
       expect(result).toEqual(mockOpportunities);
-      expect((opportunityOS as any).store.getByStatus).toHaveBeenCalledWith(
+      expect(storeWithStatus.store.getByStatus).toHaveBeenCalledWith(
         OpportunityStatus.PROMOTED
       );
     });
@@ -99,12 +136,13 @@ describe('OpportunityOS', () => {
         type: OpportunityType.FUNNEL_DROP,
       };
 
-      (opportunityOS as any).store.get = jest.fn().mockReturnValue(mockOpportunity);
+      const storeWithGet = opportunityOS as unknown as { store: { get: jest.Mock } };
+      storeWithGet.store.get = jest.fn().mockReturnValue(mockOpportunity);
 
       const result = opportunityOS.getOpportunity('opp-1');
 
       expect(result).toEqual(mockOpportunity);
-      expect((opportunityOS as any).store.get).toHaveBeenCalledWith('opp-1');
+      expect(storeWithGet.store.get).toHaveBeenCalledWith('opp-1');
     });
   });
 });
