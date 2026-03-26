@@ -1,0 +1,46 @@
+{
+  "scripts": [
+    {
+      "name": "build",
+      "command": "npm run build",
+      "mode": "command",
+      "category": "build"
+    },
+    {
+      "name": "test",
+      "command": "npm run test",
+      "mode": "command",
+      "category": "test"
+    },
+    {
+      "name": "test:watch",
+      "command": "npm run test:watch",
+      "mode": "command",
+      "category": "test"
+    },
+    {
+      "name": "test:coverage",
+      "command": "npm run test:coverage",
+      "mode": "command",
+      "category": "test"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "mode": "command",
+      "category": "lint"
+    },
+    {
+      "name": "format",
+      "command": "npm run format",
+      "mode": "command",
+      "category": "format"
+    },
+    {
+      "name": "prepare",
+      "command": "npm run prepare",
+      "mode": "command",
+      "category": "other"
+    }
+  ]
+}
